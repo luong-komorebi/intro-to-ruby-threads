@@ -1,7 +1,8 @@
 require 'benchmark'
-require 'open-uri'
+require 'net/http'
 
-URL = 'https://ya.ru/'
+URL = URI.parse 'http://employmenthero.com/'
+
 ITERATIONS = 60
 
 def fetch_url(threads_count)
@@ -10,7 +11,7 @@ def fetch_url(threads_count)
 
   threads_count.times do
     threads << Thread.new do
-      fetches_per_thread.times { open(URL) }
+      fetches_per_thread.times { Net::HTTP.get(URL) }
     end
   end
 
@@ -24,4 +25,3 @@ Benchmark.bm(20) do |bm|
     end
   end
 end
-

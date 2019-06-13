@@ -30,12 +30,11 @@ class Order2
   end
 
   def collect_payment
-    puts 'Order2: Collecting payment...'
+    puts 'Order with mutex: Collecting payment...'
     self.status = 'paid'
   end
 end
 
-# ------ main ------
 
 order = Order.new(100.00, 'pending')
 order2 = Order2.new(100.00, 'pending')
@@ -44,6 +43,7 @@ order2 = Order2.new(100.00, 'pending')
   Thread.new do
     if order.pending?
       order.collect_payment
+      puts order.status
     end
   end
 end.each(&:join)
@@ -54,8 +54,8 @@ mutex = Mutex.new
     mutex.synchronize do
       if order2.pending?
         order2.collect_payment
+        puts order.status
       end
     end
   end
 end.each(&:join)
-
